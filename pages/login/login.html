@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/output.css">
+    <title>Login</title>
+</head>
+<body>
+    <main class="flex flex-col m-auto mt-20 items-center justify-center gap-10 w-9/10">
+        <img class="w-xs" src="/src/imgs/logo.png" alt="logo avocado">
+
+        <h1 class="text-5xl">Login</h1>
+
+        <form class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 max-w-9/10">
+            <fieldset class="fieldset">
+                <label for="email" class="label">Email</label>
+                <input type="email" class="input validator" placeholder="exemplo@email.com" autocomplete="email" name="email" id="email" required />
+                <span class="validator-hint hidden">Email inválido!</span>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <label for="senha" class="label">Senha</label>
+                <input type="password" class="input validator" minlength="8" maxlength="30" placeholder="********" name="senha" id="senha" required />
+                <span class="validator-hint hidden">A senha deve conter ao menos 8 caracteres</span>
+            </fieldset>
+
+            <h2>Ainda não possui conta? <a href="/pages/cadastro/cadastro.html" class="text-sky-500">Clique aqui</a></h2>
+
+            <button class="btn btn-neutral mt-4" type="submit">Entrar</button>
+            <button class="btn btn-ghost mt-1" type="reset">Cancelar</button>
+        </form>
+    </main>
+</body>
+</html>

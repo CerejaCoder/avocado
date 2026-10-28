@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/output.css">
+    <title>Cadastro</title>
+</head>
+<body>
+    <main class="flex flex-col m-auto mt-20 items-center justify-center gap-10 w-9/10">
+        <img class="w-xs" src="/src/imgs/logo.png" alt="logo avocado">
+
+        <h1 class="text-5xl">Cadastro</h1>
+
+        <form class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 max-w-9/10">
+            <fieldset class="fieldset">
+                <label for="username" class="label">Username</label>
+                <input type="text" class="input validator" required placeholder="Username" name="username" id="username" autocomplete="name"
+                    pattern="[A-Za-z][A-Za-z0-9\-]*" minlength="3" maxlength="30" title="Apenas letras, números ou traço (-)" />
+                <span class="validator-hint hidden">O username deve ter de 3 a 30 caracteres<br/>Contendo apenas letras, números ou traço (-)</span>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <label for="email" class="label">Email</label>
+                <input type="email" class="input validator" placeholder="exemplo@email.com" autocomplete="email" name="email" id="email" required />
+                <span class="validator-hint hidden">Email inválido!</span>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <label for="senha" class="label">Senha</label>
+                <input type="password" class="input validator" minlength="8" maxlength="30" placeholder="********" name="senha" id="senha" required />
+                <span class="validator-hint hidden">A senha deve conter ao menos 8 caracteres</span>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <label for="fotoPerfil" class="label">Foto de Perfil</label>
+                <input type="url" class="input validator" required placeholder="http://" pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9-].*[a-zA-Z0-9])?.)+[a-zA-Z].*$" 
+                title="Must be valid URL" name="fotoPerfil" id="fotoPerfil"/>
+                <span class="validator-hint hidden">A URL deve ser válida!</span>
+            </fieldset>
+
+            <h2>Já possui conta? <a href="/pages/login/login.html" class="text-sky-500">Clique aqui</a></h2>
+
+            <button class="btn btn-neutral mt-4" type="submit">Cadastrar</button>
+            <button class="btn btn-ghost mt-1" type="reset">Cancelar</button>
+        </form>
+    </main>
+</body>
+</html>
