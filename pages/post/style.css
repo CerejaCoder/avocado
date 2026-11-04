@@ -1,0 +1,32 @@
+.iconLikeSelected{
+    color: #e01414;
+    fill: #e01414;
+    transition: 0.2s ease;
+    animation: clickLike 0.2s ease-in;
+}
+
+@keyframes clickLike {
+    0%{
+        transform: scale(1);
+    }
+
+    50%{
+        transform: scale(1.2);
+    }
+
+    100%{
+        transform: scale(1);
+    }
+}
+
+@media (min-width: 1024px){
+    #sidebarLower{
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 1023px){
+    #sidebarLower{
+        visibility: visible;
+    }
+}

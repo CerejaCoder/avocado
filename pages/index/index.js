@@ -14,7 +14,6 @@ const formComment = document.querySelector('#formComment');
 const buttunToLeft = document.querySelector('.arrowToLeft');
 const buttunToRight = document.querySelector('.arrowToRight');
 const listPerfis = document.querySelector('#listPerfis');
-let position = 0;
 
 sidebarLeft.addEventListener('mouseenter', () => sidebarLeftButton.click());
 sidebarLeft.addEventListener('mouseleave', () => sidebarLeftButton.click());
