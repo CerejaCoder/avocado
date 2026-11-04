@@ -1,0 +1,11 @@
+@media (min-width: 1024px){
+    #sidebarLower{
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 1023px){
+    #sidebarLower{
+        visibility: visible;
+    }
+}
