@@ -4096,17 +4096,8 @@
   .h-6 {
     height: calc(var(--spacing) * 6);
   }
-  .h-20 {
-    height: calc(var(--spacing) * 20);
-  }
-  .h-30 {
-    height: calc(var(--spacing) * 30);
-  }
   .h-40 {
     height: calc(var(--spacing) * 40);
-  }
-  .h-50 {
-    height: calc(var(--spacing) * 50);
   }
   .max-h-150 {
     max-height: calc(var(--spacing) * 150);
@@ -4120,9 +4111,6 @@
       background-color: transparent;
     }
   }
-  .w-3xs {
-    width: var(--container-3xs);
-  }
   .w-6 {
     width: calc(var(--spacing) * 6);
   }
@@ -4135,26 +4123,26 @@
   .w-10 {
     width: calc(var(--spacing) * 10);
   }
+  .w-12 {
+    width: calc(var(--spacing) * 12);
+  }
   .w-14 {
     width: calc(var(--spacing) * 14);
+  }
+  .w-16 {
+    width: calc(var(--spacing) * 16);
   }
   .w-18 {
     width: calc(var(--spacing) * 18);
   }
-  .w-24 {
-    width: calc(var(--spacing) * 24);
-  }
-  .w-30 {
-    width: calc(var(--spacing) * 30);
+  .w-20 {
+    width: calc(var(--spacing) * 20);
   }
   .w-40 {
     width: calc(var(--spacing) * 40);
   }
   .w-48 {
     width: calc(var(--spacing) * 48);
-  }
-  .w-50 {
-    width: calc(var(--spacing) * 50);
   }
   .w-52 {
     width: calc(var(--spacing) * 52);
@@ -4168,17 +4156,26 @@
   .w-md {
     width: var(--container-md);
   }
-  .w-xl {
-    width: var(--container-xl);
-  }
   .w-xs {
     width: var(--container-xs);
   }
-  .max-w-3 {
-    max-width: calc(var(--spacing) * 3);
+  .max-w-6 {
+    max-width: calc(var(--spacing) * 6);
   }
-  .max-w-3\/10 {
-    max-width: calc(3 / 10 * 100%);
+  .max-w-6\/10 {
+    max-width: calc(6 / 10 * 100%);
+  }
+  .max-w-7 {
+    max-width: calc(var(--spacing) * 7);
+  }
+  .max-w-7\/10 {
+    max-width: calc(7 / 10 * 100%);
+  }
+  .max-w-8 {
+    max-width: calc(var(--spacing) * 8);
+  }
+  .max-w-8\/10 {
+    max-width: calc(8 / 10 * 100%);
   }
   .max-w-9 {
     max-width: calc(var(--spacing) * 9);
@@ -4533,12 +4530,6 @@
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
-  .gap-6 {
-    gap: calc(var(--spacing) * 6);
-  }
-  .gap-7 {
-    gap: calc(var(--spacing) * 7);
-  }
   .gap-10 {
     gap: calc(var(--spacing) * 10);
   }
@@ -4547,6 +4538,18 @@
   }
   .overflow-x-auto {
     overflow-x: auto;
+  }
+  .overflow-x-clip {
+    overflow-x: clip;
+  }
+  .overflow-x-hidden {
+    overflow-x: hidden;
+  }
+  .overflow-x-scroll {
+    overflow-x: scroll;
+  }
+  .overflow-x-visible {
+    overflow-x: visible;
   }
   @layer daisyui.l1.l2 {
     .menu-lg :where(li:not(.menu-title) > :not(ul, menu, details, .menu-title)) {
@@ -4671,9 +4674,6 @@
   .bg-base-300 {
     background-color: var(--color-base-300);
   }
-  .bg-blue-500 {
-    background-color: var(--color-blue-500);
-  }
   @layer daisyui.l1.l2.l3 {
     .btn-ghost {
       --btn-bg: #0000;
@@ -4715,12 +4715,6 @@
   }
   .p-5 {
     padding: calc(var(--spacing) * 5);
-  }
-  .p-10 {
-    padding: calc(var(--spacing) * 10);
-  }
-  .p-20 {
-    padding: calc(var(--spacing) * 20);
   }
   @layer daisyui.l1.l2.l3 {
     .menu-title {
@@ -4873,6 +4867,10 @@
   }
   .shadow-md {
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-sm {
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   @layer daisyui.l1.l2 {

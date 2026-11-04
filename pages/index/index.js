@@ -11,11 +11,30 @@ const modalClose = document.querySelector('#modalClose');
 
 const formComment = document.querySelector('#formComment');
 
+const buttunToLeft = document.querySelector('.arrowToLeft');
+const buttunToRight = document.querySelector('.arrowToRight');
+const listPerfis = document.querySelector('#listPerfis');
+let position = 0;
+
 sidebarLeft.addEventListener('mouseenter', () => sidebarLeftButton.click());
 sidebarLeft.addEventListener('mouseleave', () => sidebarLeftButton.click());
 formComment.addEventListener('submit', (e) => {
     e.preventDefault();
     modalClose.click();
+});
+
+buttunToLeft.addEventListener('click', () => {
+    listPerfis.scrollBy({
+        left: -100,
+        behavior: 'smooth'
+    });
+});
+
+buttunToRight.addEventListener('click', () => {
+    listPerfis.scrollBy({
+        left: 100,
+        behavior: 'smooth'
+    });
 });
 
 for (const button of buttonsSidebarLower){

@@ -54,8 +54,67 @@
                 </div>
             </nav>
             
-            <main class="flex flex-col m-auto mt-10 mb-30 items-center justify-center gap-10 w-md max-w-9/10 overflow-x-auto">
+            <main class="flex flex-col m-auto mt-10 mb-30 items-center justify-center gap-10 w-md max-w-9/10">
                 <h2 class="text-5xl">Feed</h2>
+
+                <section class="perfis flex w-md max-w-9/10 gap-3 p-5 justify-between items-center">
+                    <div class="arrow arrowToLeft">
+                        <button class="cursor-pointer">
+                            <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2.75 11.15 8.75 5.15a1.5 1.5 0 0 1 2.12 2.12L7.41 10.75H20a1.5 1.5 0 0 1 0 3H7.41l3.46 3.46a1.5 1.5 0 0 1-2.12 2.12l-6-6a1.5 1.5 0 0 1 0-2.18Z"/></svg>
+                        </button>
+                    </div>
+
+                    <article id="listPerfis" class="flex w-full gap-5 justify-start items-start overflow-x-hidden">
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+
+
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+
+                        <button class="avatar cursor-pointer">
+                            <div class="w-20 rounded-full">
+                                <img alt="Imagem do Perfil" src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                            </div>
+                        </button>
+                    </article>
+
+                    <div class="arrow arrowToRight">
+                        <button class="cursor-pointer">
+                            <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.25 11.15 15.25 5.15a1.5 1.5 0 0 0-2.12 2.12l3.46 3.48H4a1.5 1.5 0 0 0 0 3h12.59l-3.46 3.46a1.5 1.5 0 0 0 2.12 2.12l6-6a1.5 1.5 0 0 0 0-2.18Z"/></svg>
+                        </button>
+                    </div>
+                </section>
 
                 <section class="posts flex flex-col gap-10 max-w-9/10 items-center justify-center">
                      <div class="card shadow-md p-5 max-w-9/10 gap-3 w-md">
@@ -67,13 +126,17 @@
                                 <h4 class="text-lg">NewExit</h4>
                             </div>
 
-                            <button value="idPost" class="cursor-pointer">
-                            <svg class="size-[1.6em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <button class="cursor-pointer" popovertarget="popover-1" style="anchor-name:--anchor-1">
+                                <svg class="size-[1.6em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                     <circle cx="12" cy="4.5" r="2.1"/>
                                     <circle cx="12" cy="12" r="2.1"/>
                                     <circle cx="12" cy="19.5" r="2.1"/>
                                 </svg>
                             </button>
+                            <ul class="dropdown dropdown-end menu w-52 rounded-box bg-base-100 shadow-sm" popover id="popover-1" style="position-anchor:--anchor-1">
+                                <li><button value="idPost">Detelar</button></li>
+                                <li><button value="idPost">Editar</abutton></li>
+                            </ul>
                         </div>
 
                         <div class="body flex flex-col w-full gap-3">
