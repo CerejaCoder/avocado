@@ -84,10 +84,10 @@ export async function check(token){
     try{
         const res = await fetch(url + "usuarios/check", obj);
 
-        if(!res.ok)
-            throw new Error("Erro ao se conectar no servidor");
-
         const response = await res.json();
+
+        if(!res.ok)
+            throw new Error(response.msg);
 
         return { status: true, message: response.msg };
 

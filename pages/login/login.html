@@ -21,8 +21,8 @@
             </fieldset>
 
             <fieldset class="fieldset">
-                <label for="senha" class="label">Senha</label>
-                <input type="password" class="input validator" minlength="8" maxlength="30" placeholder="********" name="senha" id="senha" required />
+                <label for="password" class="label">Senha</label>
+                <input type="password" class="input validator" minlength="8" maxlength="30" placeholder="********" name="password" id="password" required />
                 <span class="validator-hint hidden">A senha deve conter ao menos 8 caracteres</span>
             </fieldset>
 
@@ -32,5 +32,19 @@
             <button class="btn btn-ghost mt-1" type="reset">Cancelar</button>
         </form>
     </main>
+
+    <dialog id="notify" class="modal">
+        <div class="modal-box">
+            <h3 id="titleNotify" class="text-lg font-bold">Hello!</h3>
+            <p id="bodyNotify" class="py-4">Press ESC key or click the button below to close</p>
+            <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Fechar</button>
+            </form>
+            </div>
+        </div>
+    </dialog>
+
+    <script type="module" src="./login.js"></script>
 </body>
 </html>
