@@ -28,15 +28,14 @@
             </fieldset>
 
             <fieldset class="fieldset">
-                <label for="senha" class="label">Senha</label>
-                <input type="password" class="input validator" minlength="8" maxlength="30" placeholder="********" name="senha" id="senha" required />
+                <label for="password" class="label">Senha</label>
+                <input type="password" class="input validator" minlength="8" maxlength="30" placeholder="********" name="password" id="password" required />
                 <span class="validator-hint hidden">A senha deve conter ao menos 8 caracteres</span>
             </fieldset>
 
             <fieldset class="fieldset">
-                <label for="fotoPerfil" class="label">Foto de Perfil</label>
-                <input type="url" class="input validator" required placeholder="http://" pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9-].*[a-zA-Z0-9])?.)+[a-zA-Z].*$" 
-                title="Must be valid URL" name="fotoPerfil" id="fotoPerfil"/>
+                <label for="userImage" class="label">Foto de Perfil</label>
+                <input type="url" class="input validator" placeholder="http://" title="A URL deve ser válida" name="userImage" id="userImage" required/>
                 <span class="validator-hint hidden">A URL deve ser válida!</span>
             </fieldset>
 
@@ -46,5 +45,19 @@
             <button class="btn btn-ghost mt-1" type="reset">Cancelar</button>
         </form>
     </main>
+
+    <dialog id="notify" class="modal">
+        <div class="modal-box">
+            <h3 id="titleNotify" class="text-lg font-bold"></h3>
+            <p id="bodyNotify" class="py-4"></p>
+            <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Fechar</button>
+            </form>
+            </div>
+        </div>
+    </dialog>
+
+    <script type="module" src="./cadastro.js"></script>
 </body>
 </html>
