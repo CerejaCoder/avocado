@@ -104,3 +104,5 @@ export async function deletePost(token, idPost){
         return { status: false, message: err.message };
     }
 }
+
+console.log(await listPosts());
