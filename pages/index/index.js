@@ -1,10 +1,12 @@
-import {configTheme, configureLikes, configureSidebarLeft, configureCommentIcon, configureComment} from "../../utils/utils.js";
+import {configTheme, configureLikes, configureSidebarLeft, configureCommentIcon, configureComment, exit, loadPerfis, showPost, loadImgProfile} from "../../utils/utils.js";
+import {listPosts} from "../../controllers/post.js";
+import {listUsers} from "../../controllers/user.js";
 
 configTheme();
-configureLikes();
+loadImgProfile();
+exit();
+loadPerfis();
 configureSidebarLeft();
-configureCommentIcon();
-configureComment();
 
 const buttunToLeft = document.querySelector(".arrowToLeft");
 const buttunToRight = document.querySelector(".arrowToRight");
@@ -23,3 +25,37 @@ buttunToRight.addEventListener("click", () => {
         behavior: 'smooth'
     });
 });
+
+await exit();
+await loadPerfis();
+
+async function loadPosts(){
+    const posts = document.querySelector("#posts");
+
+    const load = document.createElement("span");
+    load.classList.add("loading", "loading-spinner", "loading-md");
+
+    posts.append(load);
+
+    const resPosts = await listPosts();
+    const resUsers = await listUsers();
+
+    const login = localStorage.getItem("login");
+    const username = localStorage.getItem("username");
+    const userView = resUsers.users.filter((value) => value.login === login && value.nome === username)[0];
+
+    load.remove();
+
+    for (const post of resPosts.posts){
+        const {comentarios, likes, ...postInfos} = post;
+        const user = resUsers.users.filter((value) => value.id === postInfos.usuario)[0];
+
+        posts.append(await showPost(user, postInfos, comentarios, likes, userView, resUsers.users));
+    }
+    
+    configureLikes();
+    configureCommentIcon();
+    configureComment();
+}
+
+await loadPosts();
