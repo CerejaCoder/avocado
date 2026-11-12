@@ -41,7 +41,6 @@ export async function comment(id, token, commentary) {
    }
 }
 
-
 export async function editCommentary(id, token, editedCommentary) {
    const obj = {
       method: "PUT",
@@ -67,7 +66,6 @@ export async function editCommentary(id, token, editedCommentary) {
    }
 }
 
-
 export async function deleteCommentary (id, token){
    const obj = {
       method: "DELETE",
@@ -85,9 +83,9 @@ export async function deleteCommentary (id, token){
       if(!res.ok)
          throw new Error(response.msg);
 
-      return { status: true, message: response};
+      return { status: true, message: response.msg};
 
    } catch(err){
-      return { status: true, message: err.msg}
+      return { status: false, message: err.message}
    }
 }

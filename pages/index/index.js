@@ -1,4 +1,4 @@
-import {configTheme, configureLikes, configureSidebarLeft, configureCommentIcon, configureComment, exit, loadPerfis, showPost, loadImgProfile} from "../../utils/utils.js";
+import {configTheme, configureLikes, configureSidebarLeft, configureCommentIcon, configureComment, exit, loadPerfis, showPost, loadImgProfile, configureEditComment} from "../../utils/utils.js";
 import {listPosts} from "../../controllers/post.js";
 import {listUsers} from "../../controllers/user.js";
 
@@ -55,6 +55,7 @@ async function loadPosts(){
     configureLikes();
     configureCommentIcon();
     configureComment();
+    configureEditComment();
 }
 
 await loadPosts();

@@ -1,4 +1,5 @@
 import {listUsers} from "../controllers/user.js";
+import {comment, deleteCommentary, editCommentary} from "../controllers/comment.js";
 import {interact} from "../controllers/like.js";
 
 export function sendMessage(header, message){
@@ -25,7 +26,7 @@ export function configTheme(){
     });
 }
 
-export async function configureLikes(){
+export function configureLikes(){
     const likesIcons = document.querySelectorAll('.likesIcons');
 
     for (const likeIcon of likesIcons){
@@ -63,11 +64,10 @@ export function configureSidebarLeft(){
 export function configureCommentIcon(){
     const commentIcons = document.querySelectorAll('.commentIcons');
     const idCommentForm = document.querySelector('#idCommentForm');
-    const modalComment = document.querySelector('#modalComment');
 
     for (const commentIcon of commentIcons){
         commentIcon.addEventListener('click', () => {
-            modalComment.click();
+            commentModal.showModal();
             idCommentForm.value = commentIcon.parentElement.value;
         });
     }
@@ -76,13 +76,70 @@ export function configureCommentIcon(){
 export function configureComment(){
     const formComment = document.querySelector("#formComment");
 
-    formComment.addEventListener("submit", (e) => {
+    formComment.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        formComment.reset();
-        commentModal.close();
+        const token = localStorage.getItem("token");
 
-        sendMessage("Sucesso!", "Comentário registrado com sucesso!");
+        if (!token) sendMessage("Erro", "Para comentar é necessário estar logado!");
+        else {
+            const message = document.querySelector("#comment").value;
+            const idPost = Number(document.querySelector("#idCommentForm").value);
+            const res = await comment(idPost, token, message);
+
+            commentModal.close();
+
+            if (res.status){
+                formComment.reset();
+
+                sendMessage("Sucesso!", "Comentário registrado com sucesso!");
+
+                const card = document.querySelector(`.card-${idPost}`);
+                const counterCommentaris = card.children[1].children[1].children[1].children[1];
+                counterCommentaris.innerText = Number(counterCommentaris.innerText) + 1;
+
+                const footerCommentaries = card.children[3];
+
+                const userList = await listUsers();
+                const login = localStorage.getItem("login");
+                const username = localStorage.getItem("username");
+                let user = userList.users.filter((value) => value.login === login && value.nome === username)[0];
+
+                const comment = {texto: message, id: res.commentary.id, usuario: user.id};
+                const post = {id: idPost};
+
+                footerCommentaries.append(showComment(comment, user, user, post));
+
+            } else sendMessage("Erro", res.message);
+        }
+    });
+}
+
+export function configureEditComment(){
+    const formEditComment = document.querySelector("#formEditComment");
+
+    formEditComment.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const token = localStorage.getItem("token");
+
+        if (!token) sendMessage("Erro", "Para editar um comentário é necessário estar logado!");
+        else {
+            const message = document.querySelector("#commentEdited").value;
+            const idComment = Number(document.querySelector("#idEditCommentForm").value);
+            const res = await editCommentary(idComment, token, message);
+
+            editCommentModal.close();
+
+            if (res.status){
+                formEditComment.reset();
+
+                sendMessage("Sucesso!", "Comentário editado com sucesso!");
+
+                const comment = document.querySelector(`.comment-${idComment}`).lastChild;
+                comment.innerText = message;
+            } else sendMessage("Erro", res.message);
+        }
     });
 }
 
@@ -131,7 +188,7 @@ export function loadImgProfile(){
 
 export async function showPost(user, post, commentaries, likes, userViewer, userList){
     const card = document.createElement("div");
-    card.classList.add("card", "shadow-md", "p-5", "max-w-9/10", "gap-3", "w-md");
+    card.classList.add("card", "shadow-md", "p-5", "max-w-9/10", "gap-3", "w-md", `card-${post.id}`);
     
     const headerCard = document.createElement("div");
     headerCard.classList.add("headerCard", "flex", "justify-between", "flex-wrap", "gap-3");
@@ -300,31 +357,31 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
         const commentariesPart = document.createElement("div");
         commentariesPart.classList.add("comments", "flex", "flex-col", "w-full", "gap-10");
 
-        for (const comment of commentaries){
-            footerCard.append(showComment(comment, userList));
+        for (const comment of commentaries){  
+            const userComment = userList.filter((value) => value.id === comment.usuario)[0];
+            footerCard.append(showComment(comment, userComment, userViewer, post));
         }
 
         footerCard.append(commentariesPart);
     }
 
-    card.append(body);
-    card.append(divider);
-    card.append(footerCard);
+    card.append(body, divider, footerCard);
 
     return card;
 }
 
-export function showComment(comment, userList){
-    const user = userList.filter((value) => value.id === comment.usuario)[0];
+export function showComment(comment, user, userViewer, post){
     const divComment = document.createElement("div");
     const headerComment = document.createElement("div");
+    const headerLeft = document.createElement("div");
     const profile = document.createElement("button");
     const imgProfileComment = document.createElement("img");
     const userProfile = document.createElement("h4");
     const pComment = document.createElement("p");
 
-    divComment.classList.add("comment", "flex", "flex-col", "gap-3");
-    headerComment.classList.add("flex", "flex-wrap", "items-center", "gap-3");
+    divComment.classList.add(`comment-${comment.id}`, "flex", "flex-col", "gap-3");
+    headerComment.classList.add("flex", "flex-wrap", "items-center", "gap-3", "justify-between");
+    headerLeft.classList.add("flex", "gap-3", "items-center");
 
     profile.classList.add("cursor-pointer");
     profile.value = user.id;
@@ -337,12 +394,88 @@ export function showComment(comment, userList){
     userProfile.innerText = user.nome;
     userProfile.classList.add("text-lg");
 
+    headerLeft.append(profile, userProfile);
+
     pComment.classList.add("break-all");
     pComment.innerText = comment.texto;
 
     profile.append(imgProfileComment);
-    headerComment.append(profile, userProfile);
+    headerComment.append(headerLeft);
     divComment.append(headerComment, pComment);
+
+    if (comment.usuario === userViewer.id){
+        const buttonOptions = document.createElement("button");
+        const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        const listOptions = document.createElement("ul");
+        const liEdit = document.createElement('li');
+        const editButton = document.createElement('button');
+        const liDelete = document.createElement('li');
+        const deleteButton = document.createElement('button');
+
+        buttonOptions.classList.add("cursor-pointer");
+        buttonOptions.setAttribute("popovertarget", `popover-Comment${comment.id}`);
+        buttonOptions.style.setProperty("anchor-name", `--anchor-Comment${comment.id}`);
+
+        icon.classList.add("size-[1.6em]");
+        icon.setAttribute("viewBox", "0 0 24 24");
+        icon.setAttribute("fill", "currentColor");
+
+        icon.innerHTML = `
+            <circle cx="12" cy="4.5" r="2.1"/>
+            <circle cx="12" cy="12" r="2.1"/>
+            <circle cx="12" cy="19.5" r="2.1"/>
+        `;
+
+        buttonOptions.append(icon);
+        headerComment.append(buttonOptions);
+
+        listOptions.classList.add("dropdown", "dropdown-end", "menu", "w-52", "rounded-box", "bg-base-100", "shadow-sm");
+        listOptions.setAttribute('popover', '');
+        listOptions.id = `popover-Comment${comment.id}`;
+        listOptions.style.setProperty('position-anchor', `--anchor-Comment${comment.id}`);
+        
+        editButton.addEventListener("click", async (e) => {
+            editCommentModal.showModal();
+
+            const textComment = e.target.parentElement.parentElement.parentElement.nextElementSibling.innerText;
+            const textInput = document.querySelector("#commentEdited");
+            const idInput = document.querySelector("#idEditCommentForm");
+
+            idInput.value = comment.id;
+            textInput.value = textComment;
+        });
+
+        editButton.value = comment.id;
+        editButton.innerText = 'Editar';
+        liEdit.append(editButton);
+
+        deleteButton.addEventListener("click", async (e) => deleteComment(e.target.value, post.id));
+        deleteButton.value = comment.id;
+        deleteButton.innerText = 'Deletar';
+
+        liDelete.append(deleteButton);
+        
+        listOptions.append(liDelete, liEdit);
+        headerComment.append(buttonOptions, listOptions);
+    }
 
     return divComment;
 }
+
+async function deleteComment(idComment, idPost){
+    const token = localStorage.getItem("token");
+
+    const res = await deleteCommentary(idComment, token);
+
+    if (!res.status) sendMessage("Erro", res.message);
+    else {
+        const card = document.querySelector(`.card-${idPost}`);
+        const counterCommentaris = card.children[1].children[1].children[1].children[1];
+        counterCommentaris.innerText = Number(counterCommentaris.innerText) - 1;
+
+        const commentary = document.querySelector(`.comment-${idComment}`);
+        commentary.remove();
+        sendMessage("Sucesso!", res.message);
+    }
+}
+

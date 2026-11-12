@@ -74,9 +74,7 @@
                     </div>
                 </section>
 
-                <section id="posts" class="flex flex-col gap-10 max-w-9/10 items-center justify-center">
-                     
-                </section>
+                <section id="posts" class="flex flex-col gap-10 max-w-9/10 items-center justify-center"></section>
             </main>
         </div>
 
@@ -136,13 +134,36 @@
                 <span class="dock-label">Perfil</span>
             </button>
     </div>
-    
-    <button class="btn hidden" id="modalComment" onclick="commentModal.showModal()" ></button>
+   
+
+
+    <dialog id="editCommentModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="modalClose">✕</button>
+            </form>
+
+            <h3 class="text-lg font-bold">Editar Comentário</h3>
+                    
+            <form class="fieldset border-hidden rounded-box w-full border m-auto mt-10 mb-5 p-4" id="formEditComment">
+                <input class="hidden" type="number" name="idEditCommentForm" id="idEditCommentForm">
+
+                <fieldset class="fieldset w-full">
+                    <label for="commentEdited" class="label">Comentário</label>
+                    <input type="text" class="input validator w-full" name="commentEdited" id="commentEdited" placeholder="Gostei muito" required />
+                    <span class="validator-hint hidden">Obrigatório</span>
+                </fieldset>
+
+                <button class="btn btn-neutral mt-4" type="submit">Editar</button>
+                <button class="btn btn-ghost mt-1" type="reset">Limpar</button>
+            </form>
+        </div>
+    </dialog>
 
     <dialog id="commentModal" class="modal">
         <div class="modal-box">
             <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="modalClose">✕</button>
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" id="modalCloseComment">✕</button>
             </form>
 
             <h3 class="text-lg font-bold">Comentar</h3>
