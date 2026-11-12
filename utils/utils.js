@@ -1,4 +1,5 @@
 import {listUsers} from "../controllers/user.js";
+import {interact} from "../controllers/like.js";
 
 export function sendMessage(header, message){
     const title = document.querySelector("#titleNotify");
@@ -24,22 +25,29 @@ export function configTheme(){
     });
 }
 
-export function configureLikes(){
+export async function configureLikes(){
     const likesIcons = document.querySelectorAll('.likesIcons');
 
     for (const likeIcon of likesIcons){
-        likeIcon.addEventListener('click', () => {
-            let val = Number(likeIcon.nextElementSibling.innerText);
+        likeIcon.addEventListener('click', async () => {
+            const token = localStorage.getItem("token");
+            const idPost = Number(likeIcon.parentElement.value);
 
-            if (likeIcon.classList.contains('iconLikeSelected')){
-                likeIcon.classList.remove('iconLikeSelected');
-                likeIcon.nextElementSibling.innerText = --val;
-            } else {
-                likeIcon.classList.add('iconLikeSelected');
-                likeIcon.nextElementSibling.innerText = ++val;
-            } 
-            
-            //Pegar o elemento pai (botão com value) e chamar a função para atualizar - likeIcon.parentElement.value;
+            if (token){
+                const res = await interact(idPost, token);
+
+                if (res.status){
+                    let val = Number(likeIcon.nextElementSibling.innerText);
+
+                    if (likeIcon.classList.contains('iconLikeSelected')){
+                        likeIcon.classList.remove('iconLikeSelected');
+                        likeIcon.nextElementSibling.innerText = --val;
+                    } else {
+                        likeIcon.classList.add('iconLikeSelected');
+                        likeIcon.nextElementSibling.innerText = ++val;
+                    } 
+                } else sendMessage("Erro", res.message);
+            } else sendMessage("Erro", "É necessário estar logado para interagir com um post!");
         });
     }
 }
@@ -103,7 +111,7 @@ export async function loadPerfis(){
 
         div.classList.add("w-20", "rounded-full");
 
-        if (user.img) img.src = user.img;
+        if (user.img && !Number(user.img) && user.img != 'null') img.src = user.img;
         else img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqLOxRW9wIvJfJHNtxsSBRGG7drOdLd5NwKKAbnii5FA&s=10";
 
         img.alt = `Imagem de Perfil do(a) usuário(a) ${user.nome}`;
@@ -118,7 +126,7 @@ export function loadImgProfile(){
     const imageProfile = document.querySelector("#imageProfile");
     const img = localStorage.getItem("image");
 
-    if (img) imageProfile.src = img;
+    if (img && !Number(img)) imageProfile.src = img;
 }
 
 export async function showPost(user, post, commentaries, likes, userViewer, userList){
@@ -196,7 +204,7 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
     const body = document.createElement("div");
     body.classList.add("body", "flex", "flex-col", "w-full", "gap-3");
 
-    if (post.img){
+    if (post.img && !Number(post.img)){
         const imagePost = document.createElement("img");
         imagePost.classList.add("max-h-150", "w-full");
         imagePost.src = post.img;
@@ -219,6 +227,8 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
     svgLike.setAttribute('stroke-width', '2');
     svgLike.setAttribute('fill', 'none');
     svgLike.setAttribute('stroke', 'currentColor');
+
+    if (likes.some((value) => value.usuario === userViewer.id)) svgLike.classList.add("iconLikeSelected");
 
     const pathLike = document.createElementNS("http://www.w3.org/2000/svg", "path");
     pathLike.setAttribute("d", "M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z");

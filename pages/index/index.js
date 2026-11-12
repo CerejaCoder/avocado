@@ -26,9 +26,6 @@ buttunToRight.addEventListener("click", () => {
     });
 });
 
-await exit();
-await loadPerfis();
-
 async function loadPosts(){
     const posts = document.querySelector("#posts");
 
@@ -42,7 +39,9 @@ async function loadPosts(){
 
     const login = localStorage.getItem("login");
     const username = localStorage.getItem("username");
-    const userView = resUsers.users.filter((value) => value.login === login && value.nome === username)[0];
+    let userView = resUsers.users.filter((value) => value.login === login && value.nome === username)[0];
+
+    if (userView == null) userView = {id: -1};
 
     load.remove();
 
