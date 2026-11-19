@@ -1,6 +1,45 @@
-import {listUsers} from "../controllers/user.js";
 import {comment, deleteCommentary, editCommentary} from "../controllers/comment.js";
 import {interact} from "../controllers/like.js";
+
+export function getUser(users, id = null){
+    if (id != null) return users.filter((value) => value.id === id)[0];
+
+    const login = localStorage.getItem("login");
+    const username = localStorage.getItem("username");
+
+    return users.filter((value) => value.login === login && value.nome === username)[0];
+}
+
+export function configureNavigate(){
+    const navigateToPostar = document.querySelectorAll(".goPostar");
+    const navigateToHome = document.querySelectorAll(".goHome");
+
+    for (const navigate of navigateToPostar){
+        navigate.addEventListener("click", () => window.location = "../postar/postar.html");
+    }
+
+    for (const navigate of navigateToHome){
+        navigate.addEventListener("click", () => window.location = "../index/index.html");
+    }
+}
+
+export function loadButtonsProfiles(){
+    const buttons = document.querySelectorAll(".buttonProfile");
+
+    for (const button of buttons){
+        button.addEventListener("click", () => {
+            window.location = `/pages/perfil/perfil.html?id=${button.value}`;
+        });
+    }
+}
+
+export async function loadProfile(user){
+    if (user){
+        for (const button of document.querySelectorAll(".buttonMyProfile")){
+            button.value = user.id;
+        }
+    }
+}
 
 export function sendMessage(header, message){
     const title = document.querySelector("#titleNotify");
@@ -27,10 +66,10 @@ export function configTheme(){
 }
 
 export function configureLikes(){
-    const likesIcons = document.querySelectorAll('.likesIcons');
+    const likesIcons = document.querySelectorAll(".likesIcons");
 
     for (const likeIcon of likesIcons){
-        likeIcon.addEventListener('click', async () => {
+        likeIcon.addEventListener("click", async () => {
             const token = localStorage.getItem("token");
             const idPost = Number(likeIcon.parentElement.value);
 
@@ -40,11 +79,11 @@ export function configureLikes(){
                 if (res.status){
                     let val = Number(likeIcon.nextElementSibling.innerText);
 
-                    if (likeIcon.classList.contains('iconLikeSelected')){
-                        likeIcon.classList.remove('iconLikeSelected');
+                    if (likeIcon.classList.contains("iconLikeSelected")){
+                        likeIcon.classList.remove("iconLikeSelected");
                         likeIcon.nextElementSibling.innerText = --val;
                     } else {
-                        likeIcon.classList.add('iconLikeSelected');
+                        likeIcon.classList.add("iconLikeSelected");
                         likeIcon.nextElementSibling.innerText = ++val;
                     } 
                 } else sendMessage("Erro", res.message);
@@ -54,26 +93,26 @@ export function configureLikes(){
 }
 
 export function configureSidebarLeft(){
-    const sidebarLeftButton = document.querySelector('#sidebarLeftButton');
-    const sidebarLeft = document.querySelector('#sidebarLeft');
+    const sidebarLeftButton = document.querySelector("#sidebarLeftButton");
+    const sidebarLeft = document.querySelector("#sidebarLeft");
 
-    sidebarLeft.addEventListener('mouseenter', () => sidebarLeftButton.click());
-    sidebarLeft.addEventListener('mouseleave', () => sidebarLeftButton.click());
+    sidebarLeft.addEventListener("mouseenter", () => sidebarLeftButton.click());
+    sidebarLeft.addEventListener("mouseleave", () => sidebarLeftButton.click());
 }
 
 export function configureCommentIcon(){
-    const commentIcons = document.querySelectorAll('.commentIcons');
-    const idCommentForm = document.querySelector('#idCommentForm');
+    const commentIcons = document.querySelectorAll(".commentIcons");
+    const idCommentForm = document.querySelector("#idCommentForm");
 
     for (const commentIcon of commentIcons){
-        commentIcon.addEventListener('click', () => {
+        commentIcon.addEventListener("click", () => {
             commentModal.showModal();
             idCommentForm.value = commentIcon.parentElement.value;
         });
     }
 }
 
-export function configureComment(){
+export function configureComment(user){
     const formComment = document.querySelector("#formComment");
 
     formComment.addEventListener("submit", async (e) => {
@@ -88,22 +127,16 @@ export function configureComment(){
             const res = await comment(idPost, token, message);
 
             commentModal.close();
+            formComment.reset();
 
             if (res.status){
-                formComment.reset();
-
                 sendMessage("Sucesso!", "Comentário registrado com sucesso!");
 
                 const card = document.querySelector(`.card-${idPost}`);
                 const counterCommentaris = card.children[1].children[1].children[1].children[1];
-                counterCommentaris.innerText = Number(counterCommentaris.innerText) + 1;
-
                 const footerCommentaries = card.children[3];
 
-                const userList = await listUsers();
-                const login = localStorage.getItem("login");
-                const username = localStorage.getItem("username");
-                let user = userList.users.filter((value) => value.login === login && value.nome === username)[0];
+                counterCommentaris.innerText = Number(counterCommentaris.innerText) + 1;
 
                 const comment = {texto: message, id: res.commentary.id, usuario: user.id};
                 const post = {id: idPost};
@@ -130,10 +163,9 @@ export function configureEditComment(){
             const res = await editCommentary(idComment, token, message);
 
             editCommentModal.close();
+            formEditComment.reset();
 
             if (res.status){
-                formEditComment.reset();
-
                 sendMessage("Sucesso!", "Comentário editado com sucesso!");
 
                 const comment = document.querySelector(`.comment-${idComment}`).lastChild;
@@ -143,7 +175,7 @@ export function configureEditComment(){
     });
 }
 
-export async function exit(){
+export function exit(){
     const exitButtons = document.querySelectorAll(".exit");
 
     for (const exit of exitButtons){
@@ -154,21 +186,20 @@ export async function exit(){
     }
 }
 
-export async function loadPerfis(){
-    const users = await listUsers();
+export async function loadPerfis(users){
     const articlePerfis = document.querySelector("#listPerfis");
 
-    for (const user of users.users){
+    for (const user of users){
         const button = document.createElement("button");
         const div = document.createElement("div");
         const img = document.createElement("img");
 
-        button.classList.add("avatar", "cursor-pointer");
+        button.classList.add("avatar", "cursor-pointer", "buttonProfile");
         button.value = user.id;
 
         div.classList.add("w-20", "rounded-full");
 
-        if (user.img && !Number(user.img) && user.img != 'null') img.src = user.img;
+        if (user.img && !Number(user.img) && user.img != "null") img.src = user.img;
         else img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqLOxRW9wIvJfJHNtxsSBRGG7drOdLd5NwKKAbnii5FA&s=10";
 
         img.alt = `Imagem de Perfil do(a) usuário(a) ${user.nome}`;
@@ -186,7 +217,7 @@ export function loadImgProfile(){
     if (img && !Number(img)) imageProfile.src = img;
 }
 
-export async function showPost(user, post, commentaries, likes, userViewer, userList){
+export function showPost(user, post, commentaries, likes, userViewer, userList){
     const card = document.createElement("div");
     card.classList.add("card", "shadow-md", "p-5", "max-w-9/10", "gap-3", "w-md", `card-${post.id}`);
     
@@ -198,7 +229,7 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
 
     const profileButton = document.createElement("button");
     profileButton.value = user.id;
-    profileButton.classList.add("cursor-pointer");
+    profileButton.classList.add("buttonProfile", "cursor-pointer");
 
     const profileImage = document.createElement("img");
     profileImage.classList.add("mask", "mask-circle", "w-10");
@@ -236,20 +267,20 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
 
         const postOptionsList = document.createElement("ul");
         postOptionsList.classList.add("dropdown", "dropdown-end", "menu", "w-52", "rounded-box", "bg-base-100", "shadow-sm");
-        postOptionsList.setAttribute('popover', '');
+        postOptionsList.setAttribute("popover", "");
         postOptionsList.id = `popover-${post.id}`;
-        postOptionsList.style.setProperty('position-anchor', `--anchor-${post.id}`);
+        postOptionsList.style.setProperty("position-anchor", `--anchor-${post.id}`);
 
-        const liEdit = document.createElement('li');
-        const editButton = document.createElement('button');
+        const liEdit = document.createElement("li");
+        const editButton = document.createElement("button");
         editButton.value = post.id;
-        editButton.innerText = 'Editar';
+        editButton.innerText = "Editar";
         liEdit.append(editButton);
 
-        const liDelete = document.createElement('li');
-        const deleteButton = document.createElement('button');
+        const liDelete = document.createElement("li");
+        const deleteButton = document.createElement("button");
         deleteButton.value = post.id;
-        deleteButton.innerText = 'Deletar';
+        deleteButton.innerText = "Deletar";
         liDelete.append(deleteButton);
 
         postOptionsList.append(liEdit, liDelete);
@@ -278,12 +309,12 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
 
     const svgLike = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svgLike.classList.add("size-[1.8em]", "likesIcons");
-    svgLike.setAttribute('viewBox', '0 0 24 24');
-    svgLike.setAttribute('stroke-linejoin', 'round');
-    svgLike.setAttribute('stroke-linecap', 'round');
-    svgLike.setAttribute('stroke-width', '2');
-    svgLike.setAttribute('fill', 'none');
-    svgLike.setAttribute('stroke', 'currentColor');
+    svgLike.setAttribute("viewBox", "0 0 24 24");
+    svgLike.setAttribute("stroke-linejoin", "round");
+    svgLike.setAttribute("stroke-linecap", "round");
+    svgLike.setAttribute("stroke-width", "2");
+    svgLike.setAttribute("fill", "none");
+    svgLike.setAttribute("stroke", "currentColor");
 
     if (likes.some((value) => value.usuario === userViewer.id)) svgLike.classList.add("iconLikeSelected");
 
@@ -302,12 +333,12 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
 
     const svgComment = document.createElementNS("http://www.w3.org/2000/svg","svg");
     svgComment.classList.add("size-[1.8em]", "commentIcons");
-    svgComment.setAttribute('viewBox', '0 0 24 24');
-    svgComment.setAttribute('stroke-linejoin', 'round');
-    svgComment.setAttribute('stroke-linecap', 'round');
-    svgComment.setAttribute('stroke-width', '2');
-    svgComment.setAttribute('fill', 'none');
-    svgComment.setAttribute('stroke', 'currentColor');
+    svgComment.setAttribute("viewBox", "0 0 24 24");
+    svgComment.setAttribute("stroke-linejoin", "round");
+    svgComment.setAttribute("stroke-linecap", "round");
+    svgComment.setAttribute("stroke-width", "2");
+    svgComment.setAttribute("fill", "none");
+    svgComment.setAttribute("stroke", "currentColor");
 
     const pathComment = document.createElementNS("http://www.w3.org/2000/svg", "path");
     pathComment.setAttribute("d", "M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z");
@@ -327,7 +358,7 @@ export async function showPost(user, post, commentaries, likes, userViewer, user
     const date = document.createElement("p");
     const timePass = Date.parse(post.data);
     const dateFormated = new Date(timePass);
-    date.innerText = `Data da postagem: ${dateFormated.toLocaleDateString('pt-BR')}`;
+    date.innerText = `Data da postagem: ${dateFormated.toLocaleDateString("pt-BR")}`;
 
     const text = document.createElement("p");
     text.innerText = post.texto;
@@ -383,7 +414,7 @@ export function showComment(comment, user, userViewer, post){
     headerComment.classList.add("flex", "flex-wrap", "items-center", "gap-3", "justify-between");
     headerLeft.classList.add("flex", "gap-3", "items-center");
 
-    profile.classList.add("cursor-pointer");
+    profile.classList.add("buttonProfile", "cursor-pointer");
     profile.value = user.id;
 
     imgProfileComment.classList.add("mask", "mask-circle", "w-10");
@@ -407,10 +438,10 @@ export function showComment(comment, user, userViewer, post){
         const buttonOptions = document.createElement("button");
         const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         const listOptions = document.createElement("ul");
-        const liEdit = document.createElement('li');
-        const editButton = document.createElement('button');
-        const liDelete = document.createElement('li');
-        const deleteButton = document.createElement('button');
+        const liEdit = document.createElement("li");
+        const editButton = document.createElement("button");
+        const liDelete = document.createElement("li");
+        const deleteButton = document.createElement("button");
 
         buttonOptions.classList.add("cursor-pointer");
         buttonOptions.setAttribute("popovertarget", `popover-Comment${comment.id}`);
@@ -430,9 +461,9 @@ export function showComment(comment, user, userViewer, post){
         headerComment.append(buttonOptions);
 
         listOptions.classList.add("dropdown", "dropdown-end", "menu", "w-52", "rounded-box", "bg-base-100", "shadow-sm");
-        listOptions.setAttribute('popover', '');
+        listOptions.setAttribute("popover", "");
         listOptions.id = `popover-Comment${comment.id}`;
-        listOptions.style.setProperty('position-anchor', `--anchor-Comment${comment.id}`);
+        listOptions.style.setProperty("position-anchor", `--anchor-Comment${comment.id}`);
         
         editButton.addEventListener("click", async (e) => {
             editCommentModal.showModal();
@@ -446,12 +477,12 @@ export function showComment(comment, user, userViewer, post){
         });
 
         editButton.value = comment.id;
-        editButton.innerText = 'Editar';
+        editButton.innerText = "Editar";
         liEdit.append(editButton);
 
         deleteButton.addEventListener("click", async (e) => deleteComment(e.target.value, post.id));
         deleteButton.value = comment.id;
-        deleteButton.innerText = 'Deletar';
+        deleteButton.innerText = "Deletar";
 
         liDelete.append(deleteButton);
         
@@ -478,4 +509,3 @@ async function deleteComment(idComment, idPost){
         sendMessage("Sucesso!", res.message);
     }
 }
-
