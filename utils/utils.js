@@ -1,5 +1,6 @@
 import {comment, deleteCommentary, editCommentary} from "../controllers/comment.js";
 import {interact} from "../controllers/like.js";
+import {getPost} from "../controllers/post.js";
 
 export function getUser(users, id = null){
     if (id != null) return users.filter((value) => value.id === id)[0];
@@ -138,10 +139,12 @@ export function configureComment(user){
 
                 counterCommentaris.innerText = Number(counterCommentaris.innerText) + 1;
 
+                const post = await getPost(idPost);
                 const comment = {texto: message, id: res.commentary.id, usuario: user.id};
-                const post = {id: idPost};
+                
+                if (post.post.comentarios.length === 1) card.children[3].children[1].remove();
 
-                footerCommentaries.append(showComment(comment, user, user, post));
+                footerCommentaries.append(showComment(comment, user, user, post.post));
 
             } else sendMessage("Erro", res.message);
         }
@@ -507,5 +510,17 @@ async function deleteComment(idComment, idPost){
         const commentary = document.querySelector(`.comment-${idComment}`);
         commentary.remove();
         sendMessage("Sucesso!", res.message);
+
+        const post = await getPost(idPost);
+
+        if (post.status){
+            if (!post.post.comentarios.length){
+                const p = document.createElement("p");
+                p.innerText = "Não há nenhum comentário nesse post";
+
+                if (card.children[3].children[1]) card.children[3].children[1].remove();
+                card.children[3].append(p);
+            }
+        }
     }
 }
