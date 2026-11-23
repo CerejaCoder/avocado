@@ -56,21 +56,21 @@
             <main class="flex flex-col m-auto mt-10 mb-30 items-center justify-center gap-10 w-md max-w-9/10">
                 <h1 class="text-5xl">Editar Post</h1>
 
-                <form class="fieldset bg-base-200 border-base-300 rounded-box w-xs max-w-9/10 border p-4">
+                <form class="fieldset bg-base-200 border-base-300 rounded-box w-xs max-w-9/10 border p-4" id="formEditPost">
                     <fieldset class="fieldset">
-                        <label for="title" class="label">Título</label>
-                        <input type="text" class="input validator" placeholder="Título" name="title" id="title" required />
+                        <label for="description" class="label">Título</label>
+                        <input type="text" class="input validator" placeholder="Título" name="description" id="description" required />
                         <p class="validator-hint hidden">Campo Obrigatório</p>
                     </fieldset>
 
                     <label class="fieldset">
                         <label for="imgPost" class="label">Imagem para o Post</label>
-                        <input type="url" class="input validator" placeholder="https://img.jpeg" pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9-].*[a-zA-Z0-9])?.)+[a-zA-Z].*$" 
-                        title="A URL deve ser válida" name="imgPost" id="imgPost" required/>
+                        <input type="url" class="input validator" placeholder="https://img.jpeg" 
+                        title="A URL deve ser válida" name="imgPost" id="imgPost"/>
                         <span class="validator-hint hidden">Campo Obrigatório</span>
                     </label>
 
-                    <button class="btn btn-neutral mt-4" type="submit">Postar</button>
+                    <button class="btn btn-neutral mt-4" type="submit">Editar Post</button>
                     <button class="btn btn-ghost mt-1" type="reset">Cancelar</button>
                 </form>
             </main>

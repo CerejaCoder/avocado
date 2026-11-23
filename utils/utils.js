@@ -1,6 +1,6 @@
 import {comment, deleteCommentary, editCommentary} from "../controllers/comment.js";
 import {interact} from "../controllers/like.js";
-import {getPost} from "../controllers/post.js";
+import {getPost, deletePost} from "../controllers/post.js";
 
 export function getUser(users, id = null){
     if (id != null) return users.filter((value) => value.id === id)[0];
@@ -134,9 +134,10 @@ export function configureComment(user){
                 sendMessage("Sucesso!", "Comentário registrado com sucesso!");
 
                 const card = document.querySelector(`.card-${idPost}`);
-                const counterCommentaris = card.children[1].children[1].children[1].children[1];
+                const body = card.children[1].children;
+                const counterCommentaris = body[body.length - 1].children[1].children[1];
                 const footerCommentaries = card.children[3];
-
+                
                 counterCommentaris.innerText = Number(counterCommentaris.innerText) + 1;
 
                 const post = await getPost(idPost);
@@ -201,8 +202,11 @@ export async function loadPerfis(users){
         button.value = user.id;
 
         div.classList.add("w-20", "rounded-full");
-
-        if (user.img && !Number(user.img) && user.img != "null") img.src = user.img;
+        
+        if (typeof user.img === "string"){
+            if (user.img.includes("http")) img.src = user.img;
+            else img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqLOxRW9wIvJfJHNtxsSBRGG7drOdLd5NwKKAbnii5FA&s=10";
+        }
         else img.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqLOxRW9wIvJfJHNtxsSBRGG7drOdLd5NwKKAbnii5FA&s=10";
 
         img.alt = `Imagem de Perfil do(a) usuário(a) ${user.nome}`;
@@ -248,7 +252,7 @@ export function showPost(user, post, commentaries, likes, userViewer, userList){
     leftHeader.append(profileButton, profileName);
     headerCard.append(leftHeader);
 
-    if (post.usuario === userViewer){
+    if (post.usuario === userViewer.id){
         const postOptions = document.createElement("button");
         postOptions.classList.add("cursor-pointer");
         postOptions.setAttribute("popovertarget", `popover-${post.id}`);
@@ -278,12 +282,35 @@ export function showPost(user, post, commentaries, likes, userViewer, userList){
         const editButton = document.createElement("button");
         editButton.value = post.id;
         editButton.innerText = "Editar";
+
+        editButton.addEventListener("click", () => {
+            window.location = `/pages/editPost/editPost.html?id=${editButton.value}`;
+        })
+
         liEdit.append(editButton);
 
         const liDelete = document.createElement("li");
         const deleteButton = document.createElement("button");
         deleteButton.value = post.id;
         deleteButton.innerText = "Deletar";
+
+        deleteButton.addEventListener("click", async () => {
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                const res = await deletePost(token, post.id);
+
+                if (res.status) {
+                    sendMessage("Sucesso", "Post Deletado");
+                    card.remove();
+                } else {
+                    sendMessage("Erro", res.message);
+                }
+            } else {
+                sendMessage("Erro", "É necessário estar logado para deletar");
+            }
+        })
+
         liDelete.append(deleteButton);
 
         postOptionsList.append(liEdit, liDelete);
@@ -295,7 +322,7 @@ export function showPost(user, post, commentaries, likes, userViewer, userList){
     const body = document.createElement("div");
     body.classList.add("body", "flex", "flex-col", "w-full", "gap-3");
 
-    if (post.img && !Number(post.img)){
+    if (post.img){
         const imagePost = document.createElement("img");
         imagePost.classList.add("max-h-150", "w-full");
         imagePost.src = post.img;
@@ -330,7 +357,7 @@ export function showPost(user, post, commentaries, likes, userViewer, userList){
     svgLike.append(pathLike);
     likeButton.append(svgLike, likesCount);
 
-    const commentButton = document.createElement("div");
+    const commentButton = document.createElement("button");
     commentButton.classList.add("cursor-pointer", "flex", "gap-1", "items-center");
     commentButton.value = post.id;
 
@@ -504,7 +531,9 @@ async function deleteComment(idComment, idPost){
     if (!res.status) sendMessage("Erro", res.message);
     else {
         const card = document.querySelector(`.card-${idPost}`);
-        const counterCommentaris = card.children[1].children[1].children[1].children[1];
+        const body = card.children[1].children;
+        const counterCommentaris = body[body.length - 1].children[1].children[1];
+        
         counterCommentaris.innerText = Number(counterCommentaris.innerText) - 1;
 
         const commentary = document.querySelector(`.comment-${idComment}`);

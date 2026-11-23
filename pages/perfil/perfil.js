@@ -14,10 +14,12 @@ async function loadPage(){
 
     const users = await listUsers();
     const userPage = utils.getUser(users.users, id);
-    const userView = utils.getUser(users.users);
+    let userView = utils.getUser(users.users);
 
     utils.loadProfile(userView);
     utils.loadButtonsProfiles();
+
+    if (userView == null) userView = {id: -1};
 
     if (userPage){
         const pUsername = document.querySelector("#username");
